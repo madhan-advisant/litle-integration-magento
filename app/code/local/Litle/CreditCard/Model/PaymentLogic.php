@@ -716,6 +716,8 @@ require_once ('Litle/LitleSDK/LitleOnline.php');
 
 			if (! $isSale) {
 				$hash = array(
+						'orderId' => $orderId,
+						'id' => $orderId,
 						'litleTxnId' => $payment->getParentTransactionId(),
 						'amount' => $amountToPass,
 						'partial' => $isPartialCapture
@@ -762,10 +764,13 @@ require_once ('Litle/LitleSDK/LitleOnline.php');
 
 		$order = $payment->getOrder();
 		$isPartialRefund = ($amount < $order->getGrandTotal()) ? true : false;
+		$orderId = $order->getIncrementId();
 
 		$amountToPass = Mage::helper('creditcard')->formatAmount($amount, true);
 		if (! empty($order)) {
 			$hash = array(
+					'orderId' => $orderId,
+					'id' => $orderId,
 					'litleTxnId' => $this->findCaptureLitleTxnToRefundForPayment($payment),
 					'amount' => $amountToPass
 			);
@@ -792,8 +797,12 @@ require_once ('Litle/LitleSDK/LitleOnline.php');
 		$this->isFromVT($payment, 'void');
 
 		$order = $payment->getOrder();
+		$orderId = $order->getIncrementId();
+
 		if (! empty($order)) {
 			$hash = array(
+					'orderId' => $orderId,
+					'id' => $orderId,
 					'litleTxnId' => $payment->getCcTransId()
 			);
 			$merchantData = $this->merchantData($payment);
